@@ -152,8 +152,8 @@ li:hover {
   background-color: #41414277;
 }
 
-/* li:active {
+.active {
   border-width: 5px;
-  border-color: #fb0303;
-  background-color: #c74646;
-} */
+  border:1px solid #fb0303;
+  background-color: #71297986;
+}

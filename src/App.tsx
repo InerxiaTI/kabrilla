@@ -8,46 +8,23 @@ import { FileService } from "./services/FileService";
 import { NamespaceController } from "./controllers/NamespaceController";
 import { useNamespaceContext } from "./ui/context/namespace/NameSpaceContext";
 import Layout from "./ui/layout/Layout";
+import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import PodPage from "./pages/PodPage";
 
 function App() {
-  const { addNamespace } = useNamespaceContext();
 
-  
-  const [greetMsg, setGreetMsg] = useState("");
-  
-  const [name, setName] = useState("");
-
-  async function handleClickAddNameSpace() {
-    const newNamespace: Namespace = {
-      nombre: name,
-      pods: []
-    }
-    setGreetMsg(newNamespace?.nombre)
-    addNamespace(newNamespace)
-  }
 
   return (
-    <Layout>
-      <div className="container">
-        <h1>Welcome to kabrilla</h1>
-        <form
-          className="row"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleClickAddNameSpace();
-          }}
-        >
-          <input
-            id="Namespace"
-            onChange={(e) => setName(e.currentTarget.value)}
-            placeholder="Enter a namespace"
-          />
-          <button type="submit">Add</button>
-        </form>
-        <p>texto: {greetMsg}</p>
-      </div>
-    </Layout>
-
+    <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/pod/:namespace/:podName" element={<PodPage />} />
+          </Routes>
+        
+        </Layout>
+    </BrowserRouter>
   );
 }
 

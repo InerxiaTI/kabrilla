@@ -2,7 +2,7 @@ import React from "react";
 import Sidebar from "../components/sidebar/Sidebar";
 
 interface LayoutProps {
-    children: JSX.Element;
+    children: React.ReactNode;
 }
 
 function Layout({ children }: LayoutProps) {

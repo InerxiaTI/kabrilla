@@ -5,6 +5,7 @@ import { NamespaceController } from '../../../controllers/NamespaceController';
 import { FileService } from '../../../services/FileService';
 import { useNamespaceContext } from '../../context/namespace/NameSpaceContext';
 import podsData from '../../../data-mock/pod.json'; // mi mock de pods
+import { Link, useLocation } from 'react-router-dom';
 
 
 function Sidebar() {
@@ -12,6 +13,9 @@ function Sidebar() {
   const [pods, setPods] = useState<{ [namespace: string]: string[] }>({});
   const [loadingPods, setLoadingPods] = useState<{ [namespace: string]: boolean }>({});
   const [expanded, setExpanded] = useState<{ [namespace: string]: boolean }>({});
+  const location = useLocation();
+  console.log("current path "+location.pathname);
+  
 
 
   const handleNamespaceClick = (namespace: Namespace) => {
@@ -56,6 +60,11 @@ function Sidebar() {
       color: 'white', 
       border: '0px solid red', 
       }}>
+      
+      <div className={(location.pathname == '/'? 'active': '')}>
+        <Link to={'/'}>Go to HOME</Link>
+      </div>
+        
       <div
         style={{
           border: '0px solid green',
@@ -69,7 +78,9 @@ function Sidebar() {
         <text style={{fontWeight: 'bold'}}>Namespaces</text>
         <button onClick={handleRefreshNs}>Refresh</button>
       </div>
+
       <span style={{borderBottom: '1px solid #333455'}}></span>
+
       <div style={{
         border: '0px solid blue',
         display: 'flex',
@@ -103,7 +114,12 @@ function Sidebar() {
                 {expanded[ns.nombre] && pods[ns.nombre] && (
                   <ul>
                     {pods[ns.nombre].map((pod, podIndex) => (
-                      <li key={podIndex}>{pod}</li>
+                      <li key={podIndex} className={(location.pathname == `/pod/${ns.nombre}/${pod}`? 'active': '')}>
+                        <Link to={`/pod/${ns.nombre}/${pod}`}>
+                          {pod}
+                        </Link>
+                      </li>
+                      
                     ))}
                   </ul>
                 )}
