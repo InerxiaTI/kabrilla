@@ -17,6 +17,7 @@ const initialState: NamespaceState = {
 interface NamespaceContextType {
   namespacesState: NamespaceState;
   addNamespace: (newNamespace: Namespace) => Promise<void>;
+  refreshNamespaces: () => Promise<void>;
 }
 
 
@@ -28,12 +29,13 @@ export const NamespaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const namespaceController = new NamespaceController(new FileService());
 
   useEffect(() => {
-    async function cargarNamespaces() {
-      const data: Namespace[] = await namespaceController.getNamespaces();
-      dispatch({ type: 'LOAD_NAMESPACES', payload: data });
-    }
     cargarNamespaces();
-  },);
+  },[]);
+
+  async function cargarNamespaces() {
+    const data: Namespace[] = await namespaceController.getNamespaces();
+    dispatch({ type: 'LOAD_NAMESPACES', payload: data });
+  }
 
   // ================ FUNCIONES A EXPORTAR ===========
   const addNamespace = async (newNamespace: Namespace) => {
@@ -41,8 +43,14 @@ export const NamespaceProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     dispatch({ type: 'ADD_NAMESPACE', payload: newNamespace });
   };
 
+  const refreshNamespaces = async () => {
+    dispatch({ type: 'CLEAR_NAMESPACES'});
+    console.log("################# size: "+    initialState.namespaces.length);
+    await cargarNamespaces()
+  };
+
   return (
-    <NamespaceContext.Provider value={{ namespacesState, addNamespace }}>
+    <NamespaceContext.Provider value={{ namespacesState, addNamespace, refreshNamespaces }}>
       {children}
     </NamespaceContext.Provider>
   );

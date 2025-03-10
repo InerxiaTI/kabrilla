@@ -38,12 +38,19 @@ export class FileService {
       await this.writeJsonFile(filename, defaultValue);
       return defaultValue;
     }
-    console.log("====== 2 filepath: "+filePath);
+    console.log("====== 2 filepath existe: "+filePath);
 
     const content = await readTextFile(filePath);
     console.log("content: "+JSON.stringify(content));
-    
-    return JSON.parse(content);
+    let json = [];
+    try {
+      json = JSON.parse(content)
+    } catch (error) {
+      console.error(error);
+      return json;
+    }
+
+    return json;
   }
 
   async writeJsonFile<T>(filename: string, data: T): Promise<void> {

@@ -7,6 +7,7 @@ import { Namespace } from "./types/Namespace";
 import { FileService } from "./services/FileService";
 import { NamespaceController } from "./controllers/NamespaceController";
 import { useNamespaceContext } from "./ui/context/namespace/NameSpaceContext";
+import Layout from "./ui/layout/Layout";
 
 function App() {
   const { addNamespace } = useNamespaceContext();
@@ -26,11 +27,9 @@ function App() {
   }
 
   return (
-    <div style={{ display: 'flex' }}>
-      <Sidebar />
-      <main className="container">
+    <Layout>
+      <div className="container">
         <h1>Welcome to kabrilla</h1>
-
         <form
           className="row"
           onSubmit={(e) => {
@@ -45,9 +44,10 @@ function App() {
           />
           <button type="submit">Add</button>
         </form>
-        <p>{greetMsg}</p>
-      </main>
-    </div> 
+        <p>texto: {greetMsg}</p>
+      </div>
+    </Layout>
+
   );
 }
 
