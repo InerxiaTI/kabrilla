@@ -1,11 +1,11 @@
-// src/components/Sidebar.tsx
 import React, { useState, useEffect } from 'react';
 import { Namespace } from '../../../types/Namespace';
-import { NamespaceController } from '../../../controllers/NamespaceController';
-import { FileService } from '../../../services/FileService';
 import { useNamespaceContext } from '../../context/namespace/NameSpaceContext';
 import podsData from '../../../data-mock/pod.json'; // mi mock de pods
-import { Link, useLocation } from 'react-router-dom';
+import SidebarLink from './SidebarLink';
+import { PodService } from '../../../services/PodService' // ajusta la ruta si es necesario
+
+const podService = new PodService();
 
 
 function Sidebar() {
@@ -13,8 +13,7 @@ function Sidebar() {
   const [pods, setPods] = useState<{ [namespace: string]: string[] }>({});
   const [loadingPods, setLoadingPods] = useState<{ [namespace: string]: boolean }>({});
   const [expanded, setExpanded] = useState<{ [namespace: string]: boolean }>({});
-  const location = useLocation();
-  console.log("current path "+location.pathname);
+
   
 
 
@@ -36,20 +35,31 @@ function Sidebar() {
   }
 
   useEffect(() => {
-    setPods({})
-    console.log("data pods: "+JSON.stringify(podsData));
-    
-    // Cargar los pods en segundo plano
-    namespaces.forEach(ns => {
-      setLoadingPods(prev => ({ ...prev, [ns.nombre]: true }));
-      setTimeout(() => { // Simula la carga demorada
-        const namespacePods = podsData[ns.nombre] || []; 
-        setPods(prev => ({ ...prev, [ns.nombre]: namespacePods }));
-        setLoadingPods(prev => ({ ...prev, [ns.nombre]: false }));
-      }, 1500); // Simula un retraso de 1 segundo
-    });
+    const fetchPods = async () => {
+      const newPods: { [namespace: string]: string[] } = {};
+      const newLoading: { [namespace: string]: boolean } = {};
+  
+      for (const ns of namespaces) {
+        newLoading[ns.nombre] = true;
+        try {
+          const podList = await podService.listPods(ns.nombre); // ya es string[]
+          newPods[ns.nombre] = podList;
+        } catch (err) {
+          console.error(`Error fetching pods for namespace ${ns.nombre}:`, err);
+          newPods[ns.nombre] = [];
+        } finally {
+          newLoading[ns.nombre] = false;
+        }
+      }
+  
+      setPods(newPods);
+      setLoadingPods(newLoading);
+    };
+  
+    fetchPods();
   }, [namespaces]);
-
+  
+  
   return (
     <aside style={{
       width: '256px', 
@@ -58,16 +68,16 @@ function Sidebar() {
       //background: '#333', 
       background: '#252628',
       color: 'white', 
-      border: '0px solid red', 
+      border: '1px solid white', 
       }}>
       
-      <div className={(location.pathname == '/'? 'active': '')}>
-        <Link to={'/'}>Go to HOME</Link>
+      <div>
+        <SidebarLink route='/' title='Home' />
       </div>
         
       <div
         style={{
-          border: '0px solid green',
+          border: '1px solid green',
           justifyContent: 'space-between',
           alignItems: 'center',
           display: 'flex',
@@ -114,12 +124,7 @@ function Sidebar() {
                 {expanded[ns.nombre] && pods[ns.nombre] && (
                   <ul>
                     {pods[ns.nombre].map((pod, podIndex) => (
-                      <li key={podIndex} className={(location.pathname == `/pod/${ns.nombre}/${pod}`? 'active': '')}>
-                        <Link to={`/pod/${ns.nombre}/${pod}`}>
-                          {pod}
-                        </Link>
-                      </li>
-                      
+                      <SidebarLink route={`/pod/${ns.nombre}/${pod}`} title={pod} /> 
                     ))}
                   </ul>
                 )}
@@ -128,6 +133,10 @@ function Sidebar() {
             ))}
           </ul>
         </nav>
+      </div>
+
+      <div>
+        <SidebarLink route='/settings' title='Settings TEMP' />
       </div>
     </aside>
   );

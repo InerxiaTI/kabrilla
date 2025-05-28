@@ -12,7 +12,7 @@ body {
 }
 
 main {
-  background-color: #c01b1b;
+  background-color: #4a245b;
 
 }
 
@@ -43,9 +43,22 @@ main {
   flex-direction: column;
   justify-content: center;
   text-align: center;
-  border: 0px solid red;
+  border: 1px solid red;
   width: 100%;
 }
+
+
+.container2 {
+  background-color: #3b3c3e;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh; /* usa toda la altura disponible */
+  overflow: hidden; /* evita scroll innecesario */
+  box-sizing: border-box;
+}
+
 
 .logo {
   height: 6em;
@@ -139,6 +152,8 @@ ul {
 }
 
 li {
+  list-style-type: none;
+
   padding: 10px;
   border-radius: 8px;
   border-width: 1px;
@@ -154,6 +169,6 @@ li:hover {
 
 .active {
   border-width: 5px;
-  border:1px solid #fb0303;
+  border:0px solid #fb0303;
   background-color: #71297986;
 }

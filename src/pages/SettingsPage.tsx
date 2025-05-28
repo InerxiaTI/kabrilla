@@ -1,11 +1,8 @@
-// pages/PodPage.tsx
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Namespace } from '../types/Namespace';
-import { useNamespaceContext } from '../ui/context/namespace/NameSpaceContext';
-import { NamespaceController } from '../controllers/NamespaceController';
+import { useState } from "react";
+import { Namespace } from "../types/Namespace";
+import { useNamespaceContext } from "../ui/context/namespace/NameSpaceContext";
 
-function HomePage() {
+function SettingsPage() {
 //   const { namespace, podName } = useParams();
   const { addNamespace } = useNamespaceContext();
 
@@ -14,7 +11,7 @@ function HomePage() {
   
   const [name, setName] = useState("");
 
-  async function handleClickAddNameSpace() {
+  async function handleClickAddKubectlPath() {
     const newNamespace: Namespace = {
       nombre: name,
       pods: []
@@ -24,28 +21,29 @@ function HomePage() {
   }
 
 
-
   return (
     <div className="container">
-    <h1>Welcome to kabrilla</h1>
+    <div>
+        <h1>Settings</h1>
+    </div>
+
     <form
       className="row"
       onSubmit={(e) => {
         e.preventDefault();
-        handleClickAddNameSpace();
+        handleClickAddKubectlPath();
       }}
     >
       <input
         id="Namespace"
         onChange={(e) => setName(e.currentTarget.value)}
-        placeholder="Enter a namespace"
+        placeholder="Enter kubectl path"
       />
       <button type="submit">Add</button>
     </form>
-    <p>texto: {greetMsg}</p>
+    <p>kubectl: {greetMsg}</p>
   </div>
   );
 }
 
-export default HomePage;
-
+export default SettingsPage;

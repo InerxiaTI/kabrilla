@@ -11,6 +11,9 @@ import Layout from "./ui/layout/Layout";
 import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import PodPage from "./pages/PodPage";
+import SettingsPage from "./pages/SettingsPage";
+import KubernetesDashboard from "./pages/KubeDashboard";
+import { LogViewer } from "./pages/LogViewer";
 
 function App() {
 
@@ -21,6 +24,9 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/pod/:namespace/:podName" element={<PodPage />} />
+            <Route path="/settings" element={<LogViewer />} />
+
+
           </Routes>
         
         </Layout>
