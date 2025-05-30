@@ -9,6 +9,7 @@ pub fn run() {
             tauri_commands::greet,
             tauri_commands::get_pods,
             tauri_commands::get_logs,
+            tauri_commands::save_aws_credentials
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

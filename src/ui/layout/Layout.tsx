@@ -7,9 +7,36 @@ interface LayoutProps {
 
 function Layout({ children }: LayoutProps) {
     return (
-      <div style={{ display: 'flex' , height: '100vh', width: '100vw', border: '0px solid yellow' }}>
-        <Sidebar/>
-        <main style={{flex: 1, display: 'flex' , height: '100vh', border: '0px solid red'}}>{children}</main>
+      <div 
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          height: '100vh',
+          width: '100vw',
+          minWidth: '1200px',
+          minHeight: '720px',
+          overflow: 'hidden', // Elimina scrolls no deseados
+        }}
+      >
+        <div
+          style={{
+            width: '350px',
+            height: '100%',
+            backgroundColor: '#252628',
+            // overflowY: 'auto',
+          }}
+        >
+          <Sidebar />
+        </div>
+        <main 
+          style={{
+            flexGrow: 1,
+            height: '100%',
+            overflow: 'auto',
+            backgroundColor: '#1e1e1e',
+            color: 'white',
+          }}
+        >{children}</main>
       </div>
     );
 }

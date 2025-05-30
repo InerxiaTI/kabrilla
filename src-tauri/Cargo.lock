@@ -2170,7 +2170,6 @@ dependencies = [
  "base64 0.22.1",
  "k8s-openapi",
  "kube",
- "rustls-pemfile",
  "secrecy",
  "serde",
  "serde_json",

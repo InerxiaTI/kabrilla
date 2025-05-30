@@ -4,13 +4,14 @@ import { useNamespaceContext } from '../../context/namespace/NameSpaceContext';
 import podsData from '../../../data-mock/pod.json'; // mi mock de pods
 import SidebarLink from './SidebarLink';
 import { PodService } from '../../../services/PodService' // ajusta la ruta si es necesario
+import { PodResponseDto } from '../../../types/kubernetes';
 
 const podService = new PodService();
 
 
 function Sidebar() {
   const { namespacesState: {namespaces}, refreshNamespaces } = useNamespaceContext();
-  const [pods, setPods] = useState<{ [namespace: string]: string[] }>({});
+  const [pods, setPods] = useState<{ [namespace: string]: PodResponseDto[] }>({});
   const [loadingPods, setLoadingPods] = useState<{ [namespace: string]: boolean }>({});
   const [expanded, setExpanded] = useState<{ [namespace: string]: boolean }>({});
 
@@ -36,24 +37,21 @@ function Sidebar() {
 
   useEffect(() => {
     const fetchPods = async () => {
-      const newPods: { [namespace: string]: string[] } = {};
-      const newLoading: { [namespace: string]: boolean } = {};
-  
       for (const ns of namespaces) {
-        newLoading[ns.nombre] = true;
+        // Mostrar "Cargando pods..." de una vez
+        setLoadingPods(prev => ({ ...prev, [ns.nombre]: true }));
+  
         try {
-          const podList = await podService.listPods(ns.nombre); // ya es string[]
-          newPods[ns.nombre] = podList;
+          const podList: PodResponseDto[] = await podService.listPods(ns.nombre);
+          setPods(prev => ({ ...prev, [ns.nombre]: podList }));
         } catch (err) {
           console.error(`Error fetching pods for namespace ${ns.nombre}:`, err);
-          newPods[ns.nombre] = [];
+          setPods(prev => ({ ...prev, [ns.nombre]: [] }));
         } finally {
-          newLoading[ns.nombre] = false;
+          // Ocultar "Cargando pods..."
+          setLoadingPods(prev => ({ ...prev, [ns.nombre]: false }));
         }
       }
-  
-      setPods(newPods);
-      setLoadingPods(newLoading);
     };
   
     fetchPods();
@@ -62,83 +60,80 @@ function Sidebar() {
   
   return (
     <aside style={{
-      width: '256px', 
+      width: '350px',
       display: 'flex',
       flexDirection: 'column',
-      //background: '#333', 
       background: '#252628',
-      color: 'white', 
-      border: '1px solid white', 
-      }}>
-      
+      color: 'white',
+      border: '0px solid white',
+      height: '100vh', // que ocupe todo el alto
+      boxSizing: 'border-box',
+    }}>
+    
+      {/* Parte superior: home + título */}
       <div>
         <SidebarLink route='/' title='Home' />
       </div>
-        
-      <div
-        style={{
-          border: '1px solid green',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'row',
-          padding: '10px'
-        }}
-      >
-        <text style={{fontWeight: 'bold'}}>Namespaces</text>
+    
+      <div style={{
+        border: '0px solid green',
+        borderBottom: '1px solid #444',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        display: 'flex',
+        flexDirection: 'row',
+        padding: '10px',
+      }}>
+        <span style={{ fontWeight: 'bold' }}>Namespaces</span>
         <button onClick={handleRefreshNs}>Refresh</button>
       </div>
-
-      <span style={{borderBottom: '1px solid #333455'}}></span>
-
+    
+    
+      {/* Contenido scrollable */}
       <div style={{
-        border: '0px solid blue',
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
+        flexGrow: 1,
         overflowY: 'auto',
-
+        padding: '10px',
+        border: '0px solid blue'
       }}>
-       
-        <nav style={{border: '0px solid green'}}>
+        <nav>
           <ul style={{
-            display: 'flex', 
+            display: 'flex',
             flexDirection: 'column',
-            gap: 10
+            gap: 10,
+            padding: 0,
+            margin: 0,
+            listStyle: 'none'
           }}>
             {namespaces.map((ns, index) => (
-              <li
-                key={index}
-                style={{border: '0px solid red' }}
-              >
-                <div style={{display: 'flex', flexDirection: 'column'}} onClick={() => handleNamespaceClick2(ns)}>
-                  <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', border: '0px solid red'}}>
+              <li key={index} style={{ border: '0px solid red' }}>
+                <div style={{ display: 'flex', flexDirection: 'column' }} onClick={() => handleNamespaceClick2(ns)}>
+                  <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <span>{ns.nombre}</span>
-                    <span style={{ marginRight: '0px' }}>
-                      {expanded[ns.nombre] ? '▼' : '▶'} {/* Icono de flecha */}
-                    </span>
+                    <span>{expanded[ns.nombre] ? '▼' : '▶'}</span>
                   </div>
-                  {loadingPods[ns.nombre] && <span>Cargando pods...</span>}
-                </div>
-
+                  {loadingPods[ns.nombre] && <span style={{ fontSize: '0.9em', color: '#aaa' }}>Cargando pods...</span>}
+                  </div>
                 {expanded[ns.nombre] && pods[ns.nombre] && (
-                  <ul>
+                  <ul style={{ paddingLeft: '15px' }}>
                     {pods[ns.nombre].map((pod, podIndex) => (
-                      <SidebarLink route={`/pod/${ns.nombre}/${pod}`} title={pod} /> 
+                      <SidebarLink key={podIndex} route={`/pod/${ns.nombre}/${pod.name}`} title={`${pod.name} - ${pod.status}`} />
                     ))}
                   </ul>
                 )}
-
               </li>
             ))}
           </ul>
         </nav>
       </div>
-
-      <div>
-        <SidebarLink route='/settings' title='Settings TEMP' />
+    
+      {/* Parte inferior fija */}
+      <div style={{ borderTop: '1px solid #444', padding: '10px' }}>
+        <SidebarLink route='/settings' title='Settings' />
       </div>
+    
     </aside>
+    
   );
 }
 

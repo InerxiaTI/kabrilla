@@ -14,6 +14,13 @@ export default defineConfig(async () => ({
   clearScreen: false,
   // 2. tauri expects a fixed port, fail if that port is not available
   server: {
+    proxy: {
+      '/api': { // Cuando una solicitud a '/api' llega a Vite
+        target: 'http://localhost:26913', // La reenvía a tu API
+        changeOrigin: true, // Importante para que el host de destino sea el de la API
+        rewrite: (path) => path.replace(/^\/api/, '/api'), // Opcional, si quieres reescribir la ruta
+      },
+    },
     port: 1420,
     strictPort: true,
     host: host || false,

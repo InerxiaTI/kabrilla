@@ -24,7 +24,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/pod/:namespace/:podName" element={<PodPage />} />
-            <Route path="/settings" element={<LogViewer />} />
+            <Route path="/settings" element={<SettingsPage />} />
 
 
           </Routes>

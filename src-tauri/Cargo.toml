@@ -28,5 +28,5 @@ kube = { version = "1.1.0", features = ["runtime", "derive"] }
 k8s-openapi = { version = "0.25.0", features = ["latest"] }
 secrecy = "0.10.3"
 base64 = "0.22.1"
-rustls-pemfile = "2.2.0"
+
 

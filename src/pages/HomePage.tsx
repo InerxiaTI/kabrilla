@@ -1,51 +1,34 @@
-// pages/PodPage.tsx
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Namespace } from '../types/Namespace';
-import { useNamespaceContext } from '../ui/context/namespace/NameSpaceContext';
-import { NamespaceController } from '../controllers/NamespaceController';
+import { useState } from "react";
+import { Namespace } from "../types/Namespace";
+import { useNamespaceContext } from "../ui/context/namespace/NameSpaceContext";
+import PageContainer from "../ui/components/PageContainer";
 
 function HomePage() {
-//   const { namespace, podName } = useParams();
+  const [name, setName] = useState("");
+  const [greetMsg, setGreetMsg] = useState("");
+
   const { addNamespace } = useNamespaceContext();
 
-  
-  const [greetMsg, setGreetMsg] = useState("");
-  
-  const [name, setName] = useState("");
-
   async function handleClickAddNameSpace() {
-    const newNamespace: Namespace = {
-      nombre: name,
-      pods: []
-    }
-    setGreetMsg(newNamespace?.nombre)
-    addNamespace(newNamespace)
+    const newNamespace: Namespace = { nombre: name, pods: [] };
+    setGreetMsg(newNamespace?.nombre);
+    addNamespace(newNamespace);
   }
 
-
-
   return (
-    <div className="container">
-    <h1>Welcome to kabrilla</h1>
-    <form
-      className="row"
-      onSubmit={(e) => {
-        e.preventDefault();
-        handleClickAddNameSpace();
-      }}
-    >
-      <input
-        id="Namespace"
-        onChange={(e) => setName(e.currentTarget.value)}
-        placeholder="Enter a namespace"
-      />
-      <button type="submit">Add</button>
-    </form>
-    <p>texto: {greetMsg}</p>
-  </div>
+    <PageContainer>
+      <h1>Welcome to kabrilla</h1>
+      <form onSubmit={(e) => { e.preventDefault(); handleClickAddNameSpace(); }}>
+        <input
+          id="Namespace"
+          onChange={(e) => setName(e.currentTarget.value)}
+          placeholder="Enter a namespace"
+        />
+        <button type="submit">Add</button>
+      </form>
+      <p>texto: {greetMsg}</p>
+    </PageContainer>
   );
 }
 
-export default HomePage;
-
+export default HomePage
