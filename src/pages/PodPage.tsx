@@ -18,7 +18,7 @@ function PodPage() {
     setLogs(state)
     if (eventSource) return; // ya está activo
   
-    const es = new EventSource(`http://localhost:26913/kabrilla-server/api/v1/kubernetes/logs/stream?namespace=${namespace}&podName=${podName}&containerName=${container}`);
+    const es = new EventSource(`http://localhost:26912/kabrilla-server/api/v1/kubernetes/logs/stream?namespace=${namespace}&podName=${podName}&containerName=${container}`);
   
     es.onmessage = (event) => {
       setLogs((prevLogs) => [...prevLogs, event.data]);
