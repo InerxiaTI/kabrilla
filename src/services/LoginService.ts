@@ -1,5 +1,5 @@
 import { kubernetesService } from '../clients/KubernetesClient';
-import { AwsCredentials, PodResponseDto } from '../types/kubernetes'
+import { AwsCredentials } from '../types/kubernetes'
 
 export class LoginService {
 

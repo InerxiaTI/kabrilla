@@ -1,5 +1,5 @@
 // src/contexts/NamespaceContext.tsx
-import React, { createContext, useState, useContext, useEffect, useReducer } from 'react';
+import React, { createContext, useContext, useEffect, useReducer } from 'react';
 import { Namespace } from '../../../types/Namespace';
 import { NamespaceController } from '../../../controllers/NamespaceController';
 import { FileService } from '../../../services/FileService';

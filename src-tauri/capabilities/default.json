@@ -7,6 +7,16 @@
   ],
   "permissions": [   
     "core:default",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "binaries/app",
+          "sidecar": true
+        }
+      ]
+    },
+    "shell:allow-open",
     "opener:default",
     "fs:default",
     "core:path:allow-resolve-directory", 

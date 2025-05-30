@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Namespace } from '../../../types/Namespace';
 import { useNamespaceContext } from '../../context/namespace/NameSpaceContext';
-import podsData from '../../../data-mock/pod.json'; // mi mock de pods
 import SidebarLink from './SidebarLink';
 import { PodService } from '../../../services/PodService' // ajusta la ruta si es necesario
 import { PodResponseDto } from '../../../types/kubernetes';
@@ -14,14 +13,6 @@ function Sidebar() {
   const [pods, setPods] = useState<{ [namespace: string]: PodResponseDto[] }>({});
   const [loadingPods, setLoadingPods] = useState<{ [namespace: string]: boolean }>({});
   const [expanded, setExpanded] = useState<{ [namespace: string]: boolean }>({});
-
-  
-
-
-  const handleNamespaceClick = (namespace: Namespace) => {
-    // Lógica para manejar el clic en un namespace
-    console.log('Namespace clicked:', namespace);
-  };
 
   const handleNamespaceClick2 = (namespace: Namespace) => {
     console.log('Namespace clicked:', namespace);

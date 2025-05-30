@@ -1,14 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { PodService } from '../services/PodService';
 import PageContainer from '../ui/components/PageContainer';
 
 function PodPage() {
   const { namespace, podName, container } = useParams();
   const logContainerRef = useRef<HTMLDivElement>(null);
-  const wasAtBottomRef = useRef(true);
   const isUserAtBottomRef = useRef(true);
-
 
   const [error, setError] = useState<string | null>(null);
 
@@ -29,6 +26,7 @@ function PodPage() {
     
   
     es.onerror = (err) => {
+      setError("error")
       console.error('Log stream error:', err);
       es.close();
       setEventSource(null);

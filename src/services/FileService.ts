@@ -1,6 +1,6 @@
 // src/services/FileService.ts
-import { appDataDir, homeDir } from '@tauri-apps/api/path';
-import { exists, create, writeTextFile, readTextFile, BaseDirectory, mkdir } from '@tauri-apps/plugin-fs';
+import { appDataDir} from '@tauri-apps/api/path';
+import { exists, create, writeTextFile, readTextFile, mkdir } from '@tauri-apps/plugin-fs';
 
 export class FileService {
   private async getFilePath(filename: string): Promise<string> {

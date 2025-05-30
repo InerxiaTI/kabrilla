@@ -1,4 +1,3 @@
-import React from 'react';
 import { Namespace } from '../../../types/Namespace';
 import { NamespaceState } from './NameSpaceContext';
 

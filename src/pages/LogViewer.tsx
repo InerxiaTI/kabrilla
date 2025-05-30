@@ -1,5 +1,5 @@
 // src/components/LogViewer.tsx
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { invoke } from '@tauri-apps/api/core';
 
 export function LogViewer() {
