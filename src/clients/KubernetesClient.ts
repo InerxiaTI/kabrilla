@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PodResponseDto } from '../types/kubernetes';
+import { AwsCredentials, PodResponseDto } from '../types/kubernetes';
 import { kubernetesApi } from '../config/AxiosInstance';
 
 
@@ -45,6 +45,21 @@ class KubernetesService {
         console.error('An unexpected error occurred:', error);
         throw new Error('An unexpected error occurred while fetching pods.');
       }
+    }
+  }
+
+  public async sendCredentials(creds: AwsCredentials): Promise<void> {
+    try {
+      const response = await kubernetesApi.post(`/v1/kubernetes/credentials`, creds, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Status:', response.status);
+      console.log('Body:', response.data);
+    } catch (error) {
+      console.error('Error al enviar credenciales:', error);
     }
   }
 

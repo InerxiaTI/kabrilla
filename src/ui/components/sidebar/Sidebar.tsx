@@ -117,7 +117,7 @@ function Sidebar() {
                 {expanded[ns.nombre] && pods[ns.nombre] && (
                   <ul style={{ paddingLeft: '15px' }}>
                     {pods[ns.nombre].map((pod, podIndex) => (
-                      <SidebarLink key={podIndex} route={`/pod/${ns.nombre}/${pod.name}`} title={`${pod.name} - ${pod.status}`} />
+                      <SidebarLink key={podIndex} route={`/pod/${ns.nombre}/${pod.name}/${pod.containers[0].name}`} title={`${pod.name} - ${pod.status}`} />
                     ))}
                   </ul>
                 )}

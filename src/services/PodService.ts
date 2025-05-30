@@ -1,9 +1,5 @@
 import { kubernetesService } from '../clients/KubernetesClient';
 import { PodResponseDto } from '../types/kubernetes'
-import { invoke } from '@tauri-apps/api/core';
-
-
-
 
 export class PodService {
 
@@ -20,15 +16,5 @@ export class PodService {
     
     return logs
   }
-
-  // streamLogs(namespace: string, pod: string, onData: (line: string) => void, onError?: (err: string) => void) {
-    
-  //   const event = `log_stream_${namespace}_${pod}`;
-  //   window.__TAURI__.event.listen<string>(event, (e) => {
-  //     onData(e.payload);
-  //   });
-
-  //   this.invoke("stream_logs", { namespace, pod, event })
-  //     .catch(err => onError?.(err.toString()));
-  // }
+  
 }

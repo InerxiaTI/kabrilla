@@ -23,7 +23,7 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/pod/:namespace/:podName" element={<PodPage />} />
+            <Route path="/pod/:namespace/:podName/:container" element={<PodPage />} />
             <Route path="/settings" element={<SettingsPage />} />
 
 

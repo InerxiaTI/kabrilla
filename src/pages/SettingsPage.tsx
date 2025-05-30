@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import PageContainer from "../ui/components/PageContainer";
+import { LoginService } from '../services/LoginService';
+
+const loginService = new LoginService();
 
 function SettingsPage() {
   const [awsInput, setAwsInput] = useState("");
@@ -26,13 +29,10 @@ function SettingsPage() {
       console.log("ak: "+secretKey);
       console.log("ak: "+sessionToken);
 
-      
-      await invoke("save_aws_credentials", {
-        accessKey,
+      const response = await loginService.setCredentials({accessKey,
         secretKey,
-        sessionToken,
-      });
-      setStatusMsg("Credenciales guardadas con éxito.");
+        sessionToken,})
+      setStatusMsg(response);
     } catch (err: any) {
       setStatusMsg("Error: " + err.message);
     }

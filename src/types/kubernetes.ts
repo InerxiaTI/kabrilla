@@ -8,4 +8,11 @@ export interface PodResponseDto {
   status: string;
   containers: ContainerDto[];
 }
+
+export interface AwsCredentials {
+  accessKey: string;
+  secretKey: string;
+  sessionToken: string;
+}
+
   

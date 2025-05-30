@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { PodService } from '../services/PodService';
 import PageContainer from '../ui/components/PageContainer';
 
 function PodPage() {
-  const { namespace, podName } = useParams();
-  //const [logs, setLogs] = useState<string>('Cargando logs...');
+  const { namespace, podName, container } = useParams();
+  const logContainerRef = useRef<HTMLDivElement>(null);
+  const wasAtBottomRef = useRef(true);
+  const isUserAtBottomRef = useRef(true);
+
+
   const [error, setError] = useState<string | null>(null);
 
   const [logs, setLogs] = useState<string[]>(["Cargando logs..."]);
@@ -17,12 +21,12 @@ function PodPage() {
     setLogs(state)
     if (eventSource) return; // ya está activo
   
-    const es = new EventSource(`http://localhost:26913/kabrilla-server/api/v1/kubernetes/logs/stream?namespace=${namespace}&podName=${podName}`);
+    const es = new EventSource(`http://localhost:26913/kabrilla-server/api/v1/kubernetes/logs/stream?namespace=${namespace}&podName=${podName}&containerName=${container}`);
   
     es.onmessage = (event) => {
-      //setLogs([])
       setLogs((prevLogs) => [...prevLogs, event.data]);
     };
+    
   
     es.onerror = (err) => {
       console.error('Log stream error:', err);
@@ -43,6 +47,33 @@ function PodPage() {
     }
   };
 
+  useEffect(() => {
+    const el = logContainerRef.current;
+    if (!el) return;
+  
+    const handleScroll = () => {
+      const threshold = 50;
+      const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < threshold;
+      isUserAtBottomRef.current = atBottom;
+    };
+  
+    el.addEventListener('scroll', handleScroll);
+  
+    return () => {
+      el.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const el = logContainerRef.current;
+    if (!el) return;
+  
+    if (isUserAtBottomRef.current) {
+      el.scrollTop = el.scrollHeight;
+    }
+  }, [logs]);
+  
+  
   useEffect(() => {
     return () => {
       if (eventSource) {
@@ -80,11 +111,12 @@ function PodPage() {
       </div>
 
       <div>
-      <button onClick={startStreaming} disabled={isStreaming}>Iniciar logs</button>
-      <button onClick={stopStreaming} disabled={!isStreaming}>Detener logs</button>
-    </div>
+        <button onClick={startStreaming} disabled={isStreaming}>Iniciar logs</button>
+        <button onClick={stopStreaming} disabled={!isStreaming}>Detener logs</button>
+      </div>
 
       <div
+        ref={logContainerRef}
         style={{
           height: '400px',
           overflowY: 'auto',
@@ -95,11 +127,14 @@ function PodPage() {
           border: '1px solid #444',
           padding: '15px',
           boxSizing: 'border-box',
-          fontFamily: 'monospace' // opcional para estilo tipo terminal
-
+          fontFamily: 'monospace',
         }}
       >
-        {error ? <p style={{ color: 'red' }}>Error: {error}</p> : logs.map((line, index) => (<div key={index}>{line}</div>))}
+        {error ? (
+          <p style={{ color: 'red' }}>Error: {error}</p>
+        ) : (
+          logs.map((line, index) => <div key={index}>{line}</div>)
+        )}
       </div>
     </PageContainer>
   );
