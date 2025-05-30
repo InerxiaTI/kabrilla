@@ -8,15 +8,44 @@
   "permissions": [   
     "core:default",
     {
-      "identifier": "shell:allow-execute",
+      "identifier": "shell:allow-spawn",
       "allow": [
         {
-          "name": "binaries/app",
-          "sidecar": true
+          "name": "git",
+          "cmd": "git",
+          "args": [
+            "status",
+            {
+              "validator": ".+"
+            }
+          ]
+        },
+        {
+          "name": "kabrilla-server",
+          "cmd": "C:/kabrilla/bin/kabrilla-server.exe",
+          "args": [
+          ]
         }
       ]
     },
-    "shell:allow-open",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "run-git-commit",
+          "cmd": "git",
+          "args": ["status"]
+        },
+        {
+          "name": "powershell",
+          "cmd": "powershell"
+        }
+      ]
+    },
+    
+    "shell:default",
+    "shell:allow-kill",
+    "shell:allow-stdin-write",
     "opener:default",
     "fs:default",
     "core:path:allow-resolve-directory", 
@@ -28,6 +57,10 @@
     "fs:allow-app-read",
     "fs:allow-create",
     "fs:allow-appdata-read",
-    "core:resources:default"
+    "core:resources:default",
+    "core:event:allow-listen",
+    "core:event:allow-unlisten",
+    "core:window:allow-close",
+    "core:window:allow-destroy"
   ]
 }

@@ -25,6 +25,10 @@
         {
           "identifier": "mi-capability",
           "permissions": [
+            "core:window:allow-close",
+            "core:window:allow-destroy",
+            "core:event:allow-listen",
+            "core:event:allow-unlisten",
             "core:path:default",
             "fs:default",
             "fs:allow-create",
@@ -34,6 +38,31 @@
             "fs:allow-appdata-read-recursive",
             "fs:allow-app-read",
             {
+              "identifier": "shell:allow-spawn",
+              "allow": [
+                {
+                  "name": "kabrilla-server",
+                  "cmd": "C:/kabrilla/bin/kabrilla-server.exe",
+                  "args": [
+                  ]
+                }
+              ]
+            },
+            {
+              "identifier": "shell:allow-execute",
+              "allow": [
+                {
+                  "name": "run-git-commit",
+                  "cmd": "git",
+                  "args": ["status"]
+                },
+                {
+                  "name": "powershell",
+                  "cmd": "powershell"
+                }
+              ]
+            },
+            {
               "identifier": "fs:scope",
               "allow": [{ "path": "$APPDATA/*" }] 
             }
@@ -41,6 +70,11 @@
           "windows": ["main"]
         }
       ]
+    }
+  },
+  "plugins": {
+    "tauri-plugin-shell": {
+      "scope": ["run-git-commit", "cmd", "kabrilla-server", "lsof", "kill", "powershell", "Get-Process", "Stop-Process", "Get-NetTCPConnection"]
     }
   },
   "bundle": {
@@ -52,9 +86,6 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ],
-    "externalBin": [
-      "bin/kabrilla-server"
     ]
   }
 
